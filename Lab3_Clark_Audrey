@@ -1,0 +1,50 @@
+#lang racket
+(define Member?
+  (lambda (e L)
+    (cond ((null? L) #f)
+         ((eq? e (car L)) #t)
+          (else (Member? e (cdr L)))
+          )
+    ))
+(define remove-duplicates
+  (lambda (L)
+    (cond ((null? L) '())
+          ((Member? (car L) (cdr L)) (remove-duplicates (cdr L)))
+          (else (cons (car L) (remove-duplicates (cdr L))))
+          )
+    )
+  )
+(define Union
+  (lambda (L M)
+    ;add all members of L to M
+    (define F (append L M))
+    ;call remove duplicates of M
+    (remove-duplicates F)
+    )
+  )
+(define Intersection
+  (lambda (L M)
+    (cond ((null? L) '()) ;if either L or M is null, return null
+          ((null? M) '())
+          ((Member? (car L) M) ;if the first member of L is a member of M, add it to the result
+          (cons (car L) (Intersection (cdr L) M)))
+          (else (Intersection (cdr L) M))
+          )
+    )
+  )
+(define Difference
+  (lambda (L M)
+    (cond ((null? L) '()) ;if L is null, return null
+          ((null? M) L) ;if M is null, return L
+          ((not (Member? (car L) M)) (cons (car L) (Difference (cdr L) M)))
+          (else (Difference (cdr L) M))
+          )
+    )
+  )
+(define Symmetric-Difference ;everything in L and M except for the elements that are in the intersection
+  (lambda (L M)
+    (Difference (Union L M) (Intersection L M))
+    )
+  )
+
+
