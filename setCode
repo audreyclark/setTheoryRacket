@@ -1,4 +1,12 @@
+;The four main returns of this file are:
+; 1. Return the Union of two sets
+; 2. Return the Intersection of two sets
+; 3. Return of the Difference between two sets
+; 4. Return the Symmetric-Difference of two sets
+
 #lang racket
+;Helper function: returns if element is in the given list.
+;Used by Intersection, Difference and Symmetric-Difference.
 (define Member?
   (lambda (e L)
     (cond ((null? L) #f)
@@ -6,6 +14,8 @@
           (else (Member? e (cdr L)))
           )
     ))
+;Helper function: returns list without any duplicates.
+;Used by Union
 (define remove-duplicates
   (lambda (L)
     (cond ((null? L) '())
@@ -14,6 +24,7 @@
           )
     )
   )
+;1. Union. Returns everything in both lists, L and M, without any duplicates.
 (define Union
   (lambda (L M)
     ;add all members of L to M
@@ -22,6 +33,7 @@
     (remove-duplicates F)
     )
   )
+;2. Intersection. Returns everything in common between two lists, L and M.
 (define Intersection
   (lambda (L M)
     (cond ((null? L) '()) ;if either L or M is null, return null
@@ -32,6 +44,7 @@
           )
     )
   )
+;3. Difference. Returns everything in L that is not in M.
 (define Difference
   (lambda (L M)
     (cond ((null? L) '()) ;if L is null, return null
@@ -41,7 +54,8 @@
           )
     )
   )
-(define Symmetric-Difference ;everything in L and M except for the elements that are in the intersection
+;4. Symmetric-Difference. Returns everything in L and M except for the elements that are in the intersection.
+(define Symmetric-Difference 
   (lambda (L M)
     (Difference (Union L M) (Intersection L M))
     )
